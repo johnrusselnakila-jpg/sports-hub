@@ -1,0 +1,27 @@
+# Example Render Blueprint — set SECRET_KEY, JWT_SECRET_KEY, ADMIN_PASSWORD
+# in the Render dashboard. Do not commit real secrets.
+
+services:
+  - type: web
+    name: sports-hub-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -b 0.0.0.0:$PORT app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sports-hub-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_ORIGIN
+        value: "*"
+      - key: ADMIN_EMAIL
+        value: admin@sportshub.local
+
+databases:
+  - name: sports-hub-db
+    plan: free
